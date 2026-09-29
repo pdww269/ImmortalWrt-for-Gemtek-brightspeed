@@ -142,6 +142,12 @@ jobs:
             tail -80 build-verbose.log || true
           else
             echo "No failing package found in build.log" >&2
+            echo "=== Re-running package/install with V=sc -j1 ==="
+            make package/install V=sc -j1 2>&1 | tee build-package-install.log || true
+            echo "=== Errors in build-package-install.log ==="
+            grep -nE "ERROR|error:|Error [0-9]|FAILED|Collected errors|conflict|cannot find dependency|No rule to make target|failed" build-package-install.log | head -80 || true
+            echo "=== tail of build-package-install.log ==="
+            tail -200 build-package-install.log || true
             tail -150 build.log || true
           fi
 
@@ -180,6 +186,7 @@ jobs:
           path: |
             build.log
             build-verbose.log
+            build-package-install.log
             bin/targets/airoha/an7581/*.itb
             bin/targets/airoha/an7581/*manifest
             bin/targets/airoha/an7581/config.buildinfo
