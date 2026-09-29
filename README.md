@@ -76,6 +76,7 @@ XG2010G 与 XR1710G 同属 Airoha AN7581 平台，但硬件布局和软件包集
 - 语音控制路径按原厂 5.4 固件的 `slic3_silicon`/`pcm1`/`spi` 模块序列恢复：XG2010G 设备树启用 EN7581 AFE，PCM 控制器初始化为 2 路 8-bit timeslot，并提供 25 帧 TX/RX DMA 环和 `/dev/pcm1` 20 ms 帧读写口。
 - PCM-SPI 节点提供 Si32192 身份探测、片选状态、PCM/SLIC 原始寄存器读写、2 路 FXS 的 linefeed 状态和 hook 状态读取（`identity`、`rescan`、`chip_select`、`raw_register`、`pcm_register`、`line_state`、`hook_state`）。
 - 镜像使用 XG2010G 专用 UBI 布局：`ubi` 分区从 `0x00600000` 开始，`fit` volume 位于该 UBI 分区内。
+- `2010.config` 预装 OpenClash、RPS、Airoha NPU、NAT mode、PON status、mount-utils，以及 Glass/Argon/Aurora 三套 LuCI 主题和中文界面；自定义主题与功能包仅在 XG2010G 构建流程中注入。
 
 #### 刷写和验证边界
 
@@ -156,6 +157,8 @@ XG2010G 与 XR1710G 同属 Airoha AN7581 平台，但硬件布局和软件包集
 | `luci-app-wifihistory` | WiFi 历史记录 |
 
 > 为控制固件体积，当前不预装 `luci-app-openclash`、`luci-app-passwall`、`luci-app-adguardhome` 和 `luci-app-smartdns`；SmartDNS 核心及独立 UI 仍保留。
+>
+> XG2010G 的 `2010.config` 另外预装 `luci-app-openclash` 和自定义主题/功能包。
 
 ### 主要系统包
 
@@ -222,6 +225,8 @@ XG2010G 与 XR1710G 同属 Airoha AN7581 平台，但硬件布局和软件包集
 > LuCI 中的“保留配置”不会保留额外安装的软件包。升级前请备份配置并记录已安装的软件包；升级后需要
 > 重新安装 OpenClash、PassWall、AdGuard Home 等非预装组件。请使用与新固件匹配的软件包，不要恢复
 > 旧固件的 `kmod-*` 内核模块。
+>
+> XG2010G 已预装 OpenClash；PassWall、AdGuard Home 等仍属于非预装组件。
 
 ## 本地构建（可选）
 
@@ -260,6 +265,10 @@ bash scripts/summarize-build-errors.sh build.log
 
 ### LuCI 应用来源
 - [rchen14b/luci-app-airoha-npu](https://github.com/rchen14b/luci-app-airoha-npu) - Airoha NPU 状态监控（PR #4 合并中文翻译）；现已并入合并应用 luci-app-airoha
+- [rchen14b/luci-theme-glass](https://github.com/rchen14b/luci-theme-glass) - Glass LuCI 主题及本次加入的简体中文翻译。
+- [jerrykuku/luci-theme-argon](https://github.com/jerrykuku/luci-theme-argon) - Argon LuCI 主题。
+- [eamonxg/luci-theme-aurora](https://github.com/eamonxg/luci-theme-aurora) - Aurora LuCI 主题及默认主题设置来源。
+- [qwe3017/luci-app](https://github.com/qwe3017/luci-app) - NAT mode 与 PON status 功能包来源。
 - [Gilly1970/Gemtek-W1700K](https://github.com/Gilly1970/Gemtek-W1700K) - Airoha 风扇控制与 FlowSense（commit db3f1c8）
 - [sirpdboy/luci-app-lucky](https://github.com/sirpdboy/luci-app-lucky) - Lucky 多功能工具
 
